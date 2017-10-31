@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function sso_awardforce_menu() {
+  $items['admin/config/services/sso_awardforce'] = array(
+    'title' => 'Award Force SSO settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sso_awardforce_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'sso_awardforce.admin.inc',
+    'description' => 'Configure Award Force integration',
+  );
+  $items['awardforce/sso'] = array(
+    'title' => 'Award Force SSO',
+    'page callback' => 'sso_awardforce_login',
+    'access callback' => 'user_is_logged_in',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'sso_awardforce.admin.inc',
+  );
+  return $items;
+}
+
+function sso_awardforce_login() {
+  module_load_include('php', 'sso_awardforce', 'vendor/autoload');
+  module_load_include('inc', 'sso_awardforce', 'includes/class_award_force_api');
+  module_load_include('inc', 'sso_awardforce', 'includes/class_award_force_sso');
+  $awardForce = new AwardForceSSO(new AwardForceAPI);
+  $awardForce->sso();
+}

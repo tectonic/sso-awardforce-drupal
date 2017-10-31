@@ -1,0 +1,6 @@
+name = Award Force SSO
+description = Allow site users automatically log into Award Force
+core = 7.x
+package = Custom
+
+configure = admin/config/services/sso_awardforce
