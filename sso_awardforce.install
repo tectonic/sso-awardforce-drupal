@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implements hook_uninstall().
+ * Implements hook_uninstall()
  */
 function sso_awardforce_uninstall() {
   db_delete('variable')
