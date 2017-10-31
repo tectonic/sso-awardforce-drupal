@@ -10,7 +10,7 @@ For Award Force clients with a website built with Drupal, this module allows you
 
 ## Usage
 
-- Configure the plugin by adding an `API Key` and your `Award Force URL` under the `Award Force` menu entry in the admin area.
+- Configure the plugin by adding an `API Key` and your `Award Force URL`.
 - Add a link in your theme to the following URL: `/awardforce/sso`. Make sure this link is only visible to authenticated users, e.g.:
 
 ```
