@@ -2,8 +2,8 @@
 
 use GuzzleHttp\Client;
 
-class AwardForceAPI
-{
+class AwardForceAPIV2 {
+
     private $apiUrl = 'https://api.cr4ce.com';
 
     private $apiKey;
@@ -14,7 +14,7 @@ class AwardForceAPI
     }
 
     /**
-     * Sends a GET request to the Award Force API.
+     * Sends a GET request to the Award Force API
      *
      * @param $uri
      * @param array $options
@@ -37,55 +37,15 @@ class AwardForceAPI
      * @param $uri
      * @param array $options
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return string
      */
     public function post($uri, $options = [])
     {
         try {
-            $response = $this->getClient()->post($uri, $options);
-            return json_decode($response->getBody()->getContents());
-        } catch (Exception $e) {
-            $this->handleException($e);
-        }
-    }
-
-    /**
-     * Retrieves the API access token from the database. If not available,
-     * requests it to the API.
-     *
-     * @return string
-     */
-    private function getAccessToken()
-    {
-        if ($token = variable_get('sso_awardforce_access_token', '')) {
-            return $token;
-        }
-
-        $token = $this->requestAccessToken();
-
-        variable_set('sso_awardforce_access_token', '');
-
-        return $token;
-    }
-
-    /**
-     * Requests an access token to the Award Force API.
-     *
-     * @return string
-     */
-    private function requestAccessToken()
-    {
-        try {
-            $client = new Client([
-                'base_uri' => $this->apiUrl,
-                'headers' => [
-                    'Accept' => 'application/vnd.Award Force.v1.0+json',
-                    'Authorization' => 'Basic ' . $this->apiKey,
-                ],
-            ]);
-
-            $response = $client->get('/access-token');
-            return $response->getBody()->getContents();
+            $response = $this->getClient()->post($uri, ['json' => $options]);
+            if ($response->getStatusCode() == 201) {
+                return (object)['slug' => substr((string)$response->getHeader('Location')[0], -8)];
+            }
         } catch (Exception $e) {
             $this->handleException($e);
         }
@@ -101,25 +61,25 @@ class AwardForceAPI
         return new Client([
             'base_uri' => $this->apiUrl,
             'headers' => [
-                'Accept' => 'application/vnd.Award Force.v1.0+json',
-                'Authorization' => 'Basic ' . $this->getAccessToken(),
+                'Accept' => 'application/vnd.Creative Force.v2.1+json',
+                'x-api-key' => $this->apiKey,
             ],
+            'http_errors' => false,
         ]);
     }
 
     /**
-     * Logs any potential errors, clears the API access token from the database
-     * and displays an error message to the user.
+     * Logs any potential errors, clears the API access token from the database and displays an error message to
+     * the user.
      *
      * @param Exception $e
      */
-    private function handleException(Exception $e)
+    public function handleException(Exception $e)
     {
-        variable_del('sso_awardforce_access_token');
+        variable_del('award-force-access-token');
 
         watchdog('Award Force API', $e->getMessage(), array(), WATCHDOG_ERROR);
 
         exit(t('An error has occurred. Please try again, and if the problem persists, contact the system administrator.'));
-
     }
 }

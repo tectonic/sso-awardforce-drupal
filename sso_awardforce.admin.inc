@@ -18,7 +18,7 @@ function sso_awardforce_settings_form($form, $form_state)
         '#default_value' => variable_get('sso_awardforce_api_key', ''),
         '#required' => TRUE,
         '#size' => 58,
-        '#description' => t('An Awards Manager can generate this key in Award Force (Settings > General > Integration)'),
+        '#description' => t('An Awards Manager can generate this key in Award Force (Settings > Developers > API keys)'),
     );
 
     $form = system_settings_form($form);
