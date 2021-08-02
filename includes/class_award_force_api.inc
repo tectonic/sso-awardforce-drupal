@@ -76,8 +76,6 @@ class AwardForceAPIV2 {
      */
     public function handleException(Exception $e)
     {
-        variable_del('award-force-access-token');
-
         watchdog('Award Force API', $e->getMessage(), array(), WATCHDOG_ERROR);
 
         exit(t('An error has occurred. Please try again, and if the problem persists, contact the system administrator.'));
