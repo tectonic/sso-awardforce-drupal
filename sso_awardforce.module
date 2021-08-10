@@ -32,6 +32,6 @@ function sso_awardforce_login()
     module_load_include('inc', 'sso_awardforce', 'includes/class_award_force_api');
     module_load_include('inc', 'sso_awardforce', 'includes/class_award_force_sso');
 
-    $awardForce = new AwardForceSSO(new AwardForceAPI);
+    $awardForce = new AwardForceSSO(new AwardForceAPIV2);
     $awardForce->sso();
 }
